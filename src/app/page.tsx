@@ -3,11 +3,19 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
+// ── Palette ──────────────────────────────────────────────────────────────────
 const B = {
-  yellow: "#F5C800", yellowDark: "#C9A200", yellowBg: "rgba(245,200,0,0.12)",
-  black: "#0A0A0A", dark: "#111", card: "#161616", cardHover: "#1C1C1C",
-  border: "#242424", borderLight: "#2E2E2E",
-  text: "#F5F5F5", textMid: "#999", textDim: "#555",
+  accent:       "#C1FF72",
+  accentDim:    "rgba(193,255,114,0.08)",
+  accentBorder: "rgba(193,255,114,0.22)",
+  black:        "#000000",
+  card:         "#111111",
+  cardAlt:      "#1A1A1A",
+  border:       "#262626",
+  borderLight:  "#333333",
+  text:         "#FFFFFF",
+  textMid:      "#888888",
+  textDim:      "#444444",
 };
 
 const fmt = (p: number | string) => `$${Number(p).toFixed(2)}`;
@@ -53,40 +61,40 @@ const menuData: Category[] = [
     { id:"g6", name:"Orange Honey Salmon & Shrimp",     price:25.99, description:"Salmón con infusión de naranja y miel, acompañado de camarones.", imageUrl:"https://picsum.photos/seed/salmonshrimp/600/400", badge:"new", tags:[] },
   ]},
   { id:"burgers", label:"Burgers", emoji:"🍔", items:[
-    { id:"b1", name:"Bacon Burger",     price:15.99, description:"Clásica con queso cheddar, lechuga y bacon crujiente.", imageUrl:"https://picsum.photos/seed/baconburger/600/400", badge:"bestseller", tags:[] },
-    { id:"b2", name:"Smokehouse Burger",price:15.99, description:"Ahumada con queso cheddar, bacon y aros de cebolla.", imageUrl:"https://picsum.photos/seed/smokehouse/600/400", badge:null, tags:[] },
-    { id:"b3", name:"Boricua Burger",   price:15.99, description:"Con amarillos, queso suizo y cebollas caramelizadas.", imageUrl:"https://picsum.photos/seed/boricua/600/400", badge:"new", tags:[] },
-    { id:"b4", name:"Our House Bites",  price:16.99, description:"Sliders con queso cheddar, bacon y salsa ranch.", imageUrl:"https://picsum.photos/seed/sliders/600/400", badge:null, tags:["Shareable"] },
+    { id:"b1", name:"Bacon Burger",      price:15.99, description:"Clásica con queso cheddar, lechuga y bacon crujiente.", imageUrl:"https://picsum.photos/seed/baconburger/600/400", badge:"bestseller", tags:[] },
+    { id:"b2", name:"Smokehouse Burger", price:15.99, description:"Ahumada con queso cheddar, bacon y aros de cebolla.", imageUrl:"https://picsum.photos/seed/smokehouse/600/400", badge:null, tags:[] },
+    { id:"b3", name:"Boricua Burger",    price:15.99, description:"Con amarillos, queso suizo y cebollas caramelizadas.", imageUrl:"https://picsum.photos/seed/boricua/600/400", badge:"new", tags:[] },
+    { id:"b4", name:"Our House Bites",   price:16.99, description:"Sliders con queso cheddar, bacon y salsa ranch.", imageUrl:"https://picsum.photos/seed/sliders/600/400", badge:null, tags:["Shareable"] },
   ]},
   { id:"mains", label:"Mains", emoji:"🍽️", items:[
-    { id:"m1", name:"Chicken Sandwich",     price:15.99, description:"Pollo, lechuga, tomate, queso suizo y bacon en pan crujiente.", imageUrl:"https://picsum.photos/seed/chickensandwich/600/400", badge:null, tags:[] },
-    { id:"m2", name:"Philly Cheesesteak",   price:17.99, description:"Steak con queso suizo y pimientos en pan hoagie.", imageUrl:"https://picsum.photos/seed/phillycheese/600/400", badge:"bestseller", tags:[] },
-    { id:"m3", name:"Chicken Alfredo Pasta",price:17.99, description:"Penne o Gnocchi con pollo en salsa alfredo con parmesano.", imageUrl:"https://picsum.photos/seed/alfredopasta/600/400", badge:null, tags:[] },
-    { id:"m4", name:"Quesadilla de Pollo",  price:15.99, description:"Queso cheddar, pico de gallo y sour cream con pollo.", imageUrl:"https://picsum.photos/seed/quesapollo/600/400", badge:null, tags:[] },
-    { id:"m5", name:"Quesadilla NY Steak",  price:28.99, description:"Queso cheddar, pico de gallo y sour cream con NY Steak.", imageUrl:"https://picsum.photos/seed/quesasteak/600/400", badge:null, tags:[] },
-    { id:"m6", name:"Quesadilla Camarones", price:17.99, description:"Queso cheddar, pico de gallo y sour cream con camarones.", imageUrl:"https://picsum.photos/seed/quesacamarones/600/400", badge:null, tags:[] },
+    { id:"m1", name:"Chicken Sandwich",      price:15.99, description:"Pollo, lechuga, tomate, queso suizo y bacon en pan crujiente.", imageUrl:"https://picsum.photos/seed/chickensandwich/600/400", badge:null, tags:[] },
+    { id:"m2", name:"Philly Cheesesteak",    price:17.99, description:"Steak con queso suizo y pimientos en pan hoagie.", imageUrl:"https://picsum.photos/seed/phillycheese/600/400", badge:"bestseller", tags:[] },
+    { id:"m3", name:"Chicken Alfredo Pasta", price:17.99, description:"Penne o Gnocchi con pollo en salsa alfredo con parmesano.", imageUrl:"https://picsum.photos/seed/alfredopasta/600/400", badge:null, tags:[] },
+    { id:"m4", name:"Quesadilla de Pollo",   price:15.99, description:"Queso cheddar, pico de gallo y sour cream con pollo.", imageUrl:"https://picsum.photos/seed/quesapollo/600/400", badge:null, tags:[] },
+    { id:"m5", name:"Quesadilla NY Steak",   price:28.99, description:"Queso cheddar, pico de gallo y sour cream con NY Steak.", imageUrl:"https://picsum.photos/seed/quesasteak/600/400", badge:null, tags:[] },
+    { id:"m6", name:"Quesadilla Camarones",  price:17.99, description:"Queso cheddar, pico de gallo y sour cream con camarones.", imageUrl:"https://picsum.photos/seed/quesacamarones/600/400", badge:null, tags:[] },
   ]},
   { id:"pizza", label:"Pizza Party", emoji:"🍕", items:[
     { id:"p1", name:"Cheese Pizza",    price:14.99, description:"Salsa roja y queso mozzarella.", imageUrl:"https://picsum.photos/seed/cheesepizza/600/400", badge:null, tags:["Vegetarian"] },
     { id:"p2", name:"Honey Pepperoni", price:16.99, description:"Salsa roja, mozzarella, pepperoni y un toque de miel.", imageUrl:"https://picsum.photos/seed/pepperonipizza/600/400", badge:"bestseller", tags:[] },
   ]},
   { id:"ensaladas", label:"Ensaladas", emoji:"🥗", items:[
-    { id:"e1", name:"Caesar Salad — Pollo",    price:16.99, description:"Lechuga romana, crutones y queso parmesano con pollo.", imageUrl:"https://picsum.photos/seed/caesarpollo/600/400", badge:null, tags:[] },
-    { id:"e2", name:"Caesar Salad — NY Steak", price:27.99, description:"Lechuga romana, crutones y queso parmesano con NY Steak.", imageUrl:"https://picsum.photos/seed/caesarsteak/600/400", badge:null, tags:[] },
-    { id:"e3", name:"Caesar Salad — Camarones",price:17.99, description:"Lechuga romana, crutones y queso parmesano con camarones.", imageUrl:"https://picsum.photos/seed/caesarcamarones/600/400", badge:null, tags:[] },
-    { id:"e4", name:"Red Rooster Salad",       price:16.99, description:"Lechuga, tomate, cebolla, crutones y vinagreta balsámica.", imageUrl:"https://picsum.photos/seed/redrooster/600/400", badge:null, tags:["Vegetarian"] },
+    { id:"e1", name:"Caesar Salad — Pollo",     price:16.99, description:"Lechuga romana, crutones y queso parmesano con pollo.", imageUrl:"https://picsum.photos/seed/caesarpollo/600/400", badge:null, tags:[] },
+    { id:"e2", name:"Caesar Salad — NY Steak",  price:27.99, description:"Lechuga romana, crutones y queso parmesano con NY Steak.", imageUrl:"https://picsum.photos/seed/caesarsteak/600/400", badge:null, tags:[] },
+    { id:"e3", name:"Caesar Salad — Camarones", price:17.99, description:"Lechuga romana, crutones y queso parmesano con camarones.", imageUrl:"https://picsum.photos/seed/caesarcamarones/600/400", badge:null, tags:[] },
+    { id:"e4", name:"Red Rooster Salad",        price:16.99, description:"Lechuga, tomate, cebolla, crutones y vinagreta balsámica.", imageUrl:"https://picsum.photos/seed/redrooster/600/400", badge:null, tags:["Vegetarian"] },
   ]},
   { id:"brunch", label:"Brunch", emoji:"🍳", items:[
-    { id:"br1",  name:"Morning Beast",            price:26.99, description:"Medio Costillar con 2 Huevos Sunny Side Up, Salsa BBQ, acompañados de Papas Fritas.", imageUrl:"https://picsum.photos/seed/morningbeast/600/400", badge:"bestseller", tags:[] },
-    { id:"br2",  name:"Steak & Egg",              price:27.99, description:"Churrasco, New York o Ribeye (12oz) con 1 Huevo Sunny Side Up y Queso Parmesano.", imageUrl:"https://picsum.photos/seed/steakegg/600/400", badge:null, tags:[] },
-    { id:"br3",  name:"Chicken & Waffle",         price:15.99, description:"Pollo Empanado con Waffle, Queso Cheddar y Syrup de Fresa.", imageUrl:"https://picsum.photos/seed/chickenwaffle/600/400", badge:"new", tags:[] },
-    { id:"br4",  name:"Chicken Club Sandwich",    price:17.99, description:"Pollo, 3 Lascas de Bacon, Queso Suizo, Lechuga y Tomate.", imageUrl:"https://picsum.photos/seed/clubsandwich/600/400", badge:null, tags:[] },
-    { id:"br5",  name:"Lemy Sandwich",            price:15.99, description:"Pan Sobao con Mantequilla, Jamón de Pavo, 2 Huevos Fritos y Queso Suizo.", imageUrl:"https://picsum.photos/seed/lemysandwich/600/400", badge:null, tags:[] },
-    { id:"br6",  name:"Sunrise Burrito",          price:13.99, description:"Tortilla Wrap Rellena de Revoltillo, Queso Cheddar y Lechuga. Opcional: Bacon o Salchicha.", imageUrl:"https://picsum.photos/seed/sunriseburrito/600/400", badge:null, tags:[] },
+    { id:"br1",  name:"Morning Beast",             price:26.99, description:"Medio Costillar con 2 Huevos Sunny Side Up, Salsa BBQ, acompañados de Papas Fritas.", imageUrl:"https://picsum.photos/seed/morningbeast/600/400", badge:"bestseller", tags:[] },
+    { id:"br2",  name:"Steak & Egg",               price:27.99, description:"Churrasco, New York o Ribeye (12oz) con 1 Huevo Sunny Side Up y Queso Parmesano.", imageUrl:"https://picsum.photos/seed/steakegg/600/400", badge:null, tags:[] },
+    { id:"br3",  name:"Chicken & Waffle",          price:15.99, description:"Pollo Empanado con Waffle, Queso Cheddar y Syrup de Fresa.", imageUrl:"https://picsum.photos/seed/chickenwaffle/600/400", badge:"new", tags:[] },
+    { id:"br4",  name:"Chicken Club Sandwich",     price:17.99, description:"Pollo, 3 Lascas de Bacon, Queso Suizo, Lechuga y Tomate.", imageUrl:"https://picsum.photos/seed/clubsandwich/600/400", badge:null, tags:[] },
+    { id:"br5",  name:"Lemy Sandwich",             price:15.99, description:"Pan Sobao con Mantequilla, Jamón de Pavo, 2 Huevos Fritos y Queso Suizo.", imageUrl:"https://picsum.photos/seed/lemysandwich/600/400", badge:null, tags:[] },
+    { id:"br6",  name:"Sunrise Burrito",           price:13.99, description:"Tortilla Wrap Rellena de Revoltillo, Queso Cheddar y Lechuga. Opcional: Bacon o Salchicha.", imageUrl:"https://picsum.photos/seed/sunriseburrito/600/400", badge:null, tags:[] },
     { id:"br7",  name:"Sweet & Salty French Toast",price:13.99, description:"Pan de Mallorca, Pedazos de Bacon, Syrup de Fresa y Whipped Cream.", imageUrl:"https://picsum.photos/seed/frenchtoast/600/400", badge:null, tags:[] },
-    { id:"br8",  name:"Sunny Bowls",              price:13.99, description:"Escoge: Ropa Vieja $13.99 · Carne Frita $13.99 · Churrasco $19.99. Con Papas + Huevo Sunny Side Up y Queso Parmesano.", imageUrl:"https://picsum.photos/seed/sunnybowls/600/400", badge:null, tags:[] },
-    { id:"br9",  name:"Caramel Waffles",          price:6.99,  description:"Waffles Bañados en Salsa de Caramelo y Azúcar en Polvo.", imageUrl:"https://picsum.photos/seed/caramelwaffles/600/400", badge:null, tags:["Vegetarian"] },
-    { id:"br10", name:"Good Morning Sampler",     price:15.99, description:"French Toast Sticks, Waffles, Sweet Potato Fries con Salsas de Chocolate, Fresa y Caramelo.", imageUrl:"https://picsum.photos/seed/morningsampler/600/400", badge:null, tags:["Shareable"] },
+    { id:"br8",  name:"Sunny Bowls",               price:13.99, description:"Escoge: Ropa Vieja $13.99 · Carne Frita $13.99 · Churrasco $19.99. Con Papas + Huevo Sunny Side Up y Queso Parmesano.", imageUrl:"https://picsum.photos/seed/sunnybowls/600/400", badge:null, tags:[] },
+    { id:"br9",  name:"Caramel Waffles",           price:6.99,  description:"Waffles Bañados en Salsa de Caramelo y Azúcar en Polvo.", imageUrl:"https://picsum.photos/seed/caramelwaffles/600/400", badge:null, tags:["Vegetarian"] },
+    { id:"br10", name:"Good Morning Sampler",      price:15.99, description:"French Toast Sticks, Waffles, Sweet Potato Fries con Salsas de Chocolate, Fresa y Caramelo.", imageUrl:"https://picsum.photos/seed/morningsampler/600/400", badge:null, tags:["Shareable"] },
   ]},
   { id:"cervezas", label:"Cervezas", emoji:"🍺", items:[
     { id:"cv1",  name:"Medalla",               price:4.00, description:"La lager icónica de Puerto Rico. Ligera, crujiente y refrescante.", imageUrl:"https://picsum.photos/seed/medalla/600/400", badge:null, tags:[] },
@@ -145,64 +153,111 @@ const menuData: Category[] = [
 ];
 
 const ALL_TAGS = ["Shareable", "Vegetarian", "Non-Alcoholic"];
+
 const badgeCfg: Record<BadgeType, { label: string; bg: string; color: string }> = {
-  bestseller: { label:"⭐ Fan Fave", bg:B.yellow, color:B.black },
-  new:        { label:"✦ New",      bg:"#FF4500", color:"#fff" },
+  bestseller: { label: "BESTSELLER", bg: B.accent,   color: B.black },
+  new:        { label: "NEW DROP",   bg: "#FFFFFF",   color: B.black },
 };
 
+// ── Badge ────────────────────────────────────────────────────────────────────
 function Badge({ type }: { type: BadgeType | null }) {
   if (!type) return null;
   const c = badgeCfg[type];
-  if (!c) return null;
   return (
-    <span style={{ background:c.bg, color:c.color, fontSize:10, fontWeight:800, padding:"3px 9px", borderRadius:99, letterSpacing:"0.04em", whiteSpace:"nowrap" }}>
+    <span style={{
+      background: c.bg, color: c.color,
+      fontSize: 9, fontWeight: 900,
+      padding: "3px 8px", borderRadius: 2,
+      letterSpacing: "0.12em",
+      textTransform: "uppercase" as const,
+      whiteSpace: "nowrap" as const,
+    }}>
       {c.label}
     </span>
   );
 }
 
-function ItemCard({ item, index, onClick }: { item: MenuItem; index: number; onClick: (item: MenuItem) => void }) {
+// ── Item Card ────────────────────────────────────────────────────────────────
+function ItemCard({ item, index, onClick }: {
+  item: MenuItem;
+  index: number;
+  onClick: (item: MenuItem) => void;
+}) {
   const oos = item.status === "out-of-stock";
+
   return (
     <motion.div
-      initial={{ opacity:0, y:20 }}
-      animate={{ opacity:1, y:0 }}
-      exit={{ opacity:0, y:-10, scale:0.97 }}
-      transition={{ duration:0.25, delay: index * 0.04, ease:[0.25,0.1,0.25,1] }}
-      whileTap={{ scale: oos ? 1 : 0.97 }}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.18, delay: index * 0.025, ease: [0.25, 0.1, 0.25, 1] }}
+      whileTap={{ scale: oos ? 1 : 0.96 }}
       onClick={() => !oos && onClick(item)}
-      style={{ background:B.card, borderRadius:16, overflow:"hidden", cursor:oos?"default":"pointer", border:`1px solid ${B.border}`, opacity:oos?0.45:1, display:"flex", gap:0, flexDirection:"column" }}
+      style={{
+        background: B.card,
+        borderRadius: 6,
+        overflow: "hidden",
+        cursor: oos ? "default" : "pointer",
+        border: `1px solid ${B.border}`,
+        opacity: oos ? 0.38 : 1,
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
-      <div style={{ position:"relative", height:160, overflow:"hidden", background:"#1a1a1a" }}>
-        <img src={item.imageUrl} alt={item.name} loading="lazy"
-          style={{ width:"100%", height:"100%", objectFit:"cover", filter:oos?"grayscale(1)":"none", transition:"transform 0.4s ease" }} />
-        <div style={{ position:"absolute", inset:0, background:"linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%)" }} />
-        {item.badge && !oos && <div style={{ position:"absolute", top:10, left:10 }}><Badge type={item.badge} /></div>}
-        {oos && (
-          <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
-            <span style={{ background:"rgba(0,0,0,0.8)", color:"#666", fontSize:11, fontWeight:800, padding:"6px 14px", borderRadius:8, border:`1px solid #333`, letterSpacing:"0.1em", textTransform:"uppercase" }}>86'd — Sold Out</span>
+      {/* Image */}
+      <div style={{ position: "relative", height: 160, overflow: "hidden", background: "#080808", flexShrink: 0 }}>
+        <img
+          src={item.imageUrl} alt={item.name} loading="lazy"
+          style={{ width: "100%", height: "100%", objectFit: "cover", filter: oos ? "grayscale(1) brightness(0.5)" : "brightness(0.88)" }}
+        />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.92) 100%)" }} />
+        {item.badge && !oos && (
+          <div style={{ position: "absolute", top: 10, left: 10 }}>
+            <Badge type={item.badge} />
           </div>
         )}
-      </div>
-      <div style={{ padding:"12px 14px 0" }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:8 }}>
-          <span style={{ fontSize:15, fontWeight:700, color:B.text, lineHeight:1.3, flex:1 }}>{item.name}</span>
-          <span style={{ fontSize:15, fontWeight:800, color:B.yellow, whiteSpace:"nowrap" }}>{fmt(item.price)}</span>
+        {oos && (
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontSize: 9, fontWeight: 900, color: "#555", letterSpacing: "0.15em", textTransform: "uppercase", border: "1px solid #333", padding: "4px 10px", borderRadius: 2 }}>
+              SOLD OUT
+            </span>
+          </div>
+        )}
+        {/* Price stamped on image */}
+        <div style={{ position: "absolute", bottom: 10, right: 10 }}>
+          <span style={{ fontSize: 16, fontWeight: 900, color: B.accent, lineHeight: 1, letterSpacing: "-0.02em" }}>{fmt(item.price)}</span>
         </div>
-        <p style={{ fontSize:13.5, color:B.textMid, lineHeight:1.55, margin:"5px 0 8px" }}>{item.description}</p>
+      </div>
+
+      {/* Content */}
+      <div style={{ padding: "11px 13px 0", flex: 1 }}>
+        <span style={{ fontSize: 13, fontWeight: 900, color: B.text, lineHeight: 1.2, display: "block", textTransform: "uppercase", letterSpacing: "-0.01em", marginBottom: 5 }}>
+          {item.name}
+        </span>
+        <p style={{ fontSize: 12, color: B.textMid, lineHeight: 1.55, margin: "0 0 8px" }}>
+          {item.description}
+        </p>
         {item.tags?.length > 0 && (
-          <div style={{ display:"flex", gap:5, flexWrap:"wrap", marginBottom:8 }}>
+          <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 8 }}>
             {item.tags.map(t => (
-              <span key={t} style={{ fontSize:10, color:B.yellow, background:B.yellowBg, border:`1px solid rgba(245,200,0,0.3)`, padding:"2px 8px", borderRadius:99, fontWeight:700 }}>{t}</span>
+              <span key={t} style={{ fontSize: 9, color: B.accent, background: B.accentDim, border: `1px solid ${B.accentBorder}`, padding: "2px 7px", borderRadius: 2, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                {t}
+              </span>
             ))}
           </div>
         )}
       </div>
+
+      {/* Footer CTA */}
       {!oos && (
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 14px 12px", borderTop:`1px solid ${B.border}`, marginTop:4 }}>
-          <span style={{ fontSize:11.5, color:B.textDim, fontWeight:500 }}>Ver detalles</span>
-          <div style={{ width:28, height:28, borderRadius:"50%", background:B.yellow, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke={B.black} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "9px 13px 11px", borderTop: `1px solid ${B.border}`, marginTop: 4 }}>
+          <span style={{ fontSize: 9, color: B.textDim, fontWeight: 900, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+            Details
+          </span>
+          <div style={{ width: 26, height: 26, borderRadius: 3, background: B.accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+              <path d="M3 7h8M8 4l3 3-3 3" stroke={B.black} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </div>
         </div>
       )}
@@ -210,7 +265,12 @@ function ItemCard({ item, index, onClick }: { item: MenuItem; index: number; onC
   );
 }
 
-function Drawer({ item, onClose, containerRef }: { item: MenuItem; onClose: () => void; containerRef: React.RefObject<HTMLDivElement | null> }) {
+// ── Drawer ───────────────────────────────────────────────────────────────────
+function Drawer({ item, onClose, containerRef }: {
+  item: MenuItem;
+  onClose: () => void;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+}) {
   useEffect(() => {
     const el = containerRef.current;
     if (el) el.style.overflow = "hidden";
@@ -219,42 +279,72 @@ function Drawer({ item, onClose, containerRef }: { item: MenuItem; onClose: () =
 
   return (
     <motion.div
-      initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
-      transition={{ duration:0.2 }}
-      style={{ position:"fixed", inset:0, zIndex:200, background:"rgba(0,0,0,0.8)", display:"flex", alignItems:"flex-end" }}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: 0.15 }}
+      style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.88)", display: "flex", alignItems: "flex-end" }}
       onClick={onClose}
     >
       <motion.div
-        initial={{ y:"100%" }} animate={{ y:0 }} exit={{ y:"100%" }}
-        transition={{ type:"spring", stiffness:380, damping:38, mass:0.8 }}
+        initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+        transition={{ type: "spring", stiffness: 540, damping: 44, mass: 0.7 }}
         onClick={e => e.stopPropagation()}
-        style={{ width:"100%", maxHeight:"90vh", background:"#141414", borderRadius:"24px 24px 0 0", border:`1px solid ${B.borderLight}`, overflow:"hidden", display:"flex", flexDirection:"column" }}
+        style={{ width: "100%", maxHeight: "90vh", background: B.black, borderRadius: "12px 12px 0 0", border: `1px solid ${B.border}`, borderBottom: "none", overflow: "hidden", display: "flex", flexDirection: "column" }}
       >
-        {/* drag pill */}
-        <div style={{ display:"flex", justifyContent:"center", paddingTop:10, paddingBottom:2, flexShrink:0 }}>
-          <div style={{ width:36, height:4, background:"#333", borderRadius:99 }} />
+        {/* Drag pill */}
+        <div style={{ display: "flex", justifyContent: "center", paddingTop: 10, paddingBottom: 4, flexShrink: 0 }}>
+          <div style={{ width: 30, height: 3, background: B.border, borderRadius: 99 }} />
         </div>
-        <div style={{ position:"relative", height:220, flexShrink:0 }}>
-          <img src={item.imageUrl} alt={item.name} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-          <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, #141414 0%, transparent 55%)" }} />
-          <button onClick={onClose} aria-label="Cerrar"
-            style={{ position:"absolute", top:12, right:12, background:"rgba(0,0,0,0.7)", border:`1px solid ${B.border}`, color:B.text, borderRadius:"50%", width:44, height:44, cursor:"pointer", fontSize:20, display:"flex", alignItems:"center", justifyContent:"center", backdropFilter:"blur(8px)" }}>×</button>
-          {item.badge && <div style={{ position:"absolute", top:12, left:12 }}><Badge type={item.badge} /></div>}
-        </div>
-        <div style={{ overflowY:"auto", padding:"4px 20px 36px", paddingBottom:"max(36px, calc(20px + env(safe-area-inset-bottom)))", overscrollBehavior:"contain" } as React.CSSProperties}>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", margin:"12px 0 8px" }}>
-            <h2 style={{ fontSize:22, fontWeight:800, color:B.text, margin:0, flex:1, paddingRight:12, lineHeight:1.2 }}>{item.name}</h2>
-            <span style={{ fontSize:22, fontWeight:800, color:B.yellow }}>{fmt(item.price)}</span>
-          </div>
-          <p style={{ fontSize:14, color:"#aaa", lineHeight:1.7, margin:"0 0 16px" }}>{item.description}</p>
-          {item.tags?.length > 0 && (
-            <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:20 }}>
-              {item.tags.map(t => <span key={t} style={{ fontSize:11, color:B.yellow, background:B.yellowBg, border:`1px solid rgba(245,200,0,0.3)`, padding:"3px 10px", borderRadius:99, fontWeight:700 }}>{t}</span>)}
+
+        {/* Image */}
+        <div style={{ position: "relative", height: 220, flexShrink: 0 }}>
+          <img src={item.imageUrl} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.82)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, #000000 0%, transparent 55%)" }} />
+          {item.badge && (
+            <div style={{ position: "absolute", top: 12, left: 14 }}>
+              <Badge type={item.badge} />
             </div>
           )}
-          <motion.button whileTap={{ scale:0.96 }}
-            style={{ width:"100%", padding:"16px", background:B.yellow, color:B.black, border:"none", borderRadius:14, fontSize:16, fontWeight:900, cursor:"pointer", letterSpacing:"0.01em" }}>
-            🎮 Ordenar — {fmt(item.price)}
+          <button onClick={onClose} aria-label="Close"
+            style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.7)", border: `1px solid ${B.border}`, color: B.text, borderRadius: 4, width: 44, height: 44, cursor: "pointer", fontSize: 20, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(8px)", fontWeight: 900 }}>
+            ×
+          </button>
+          {/* Price on image */}
+          <div style={{ position: "absolute", bottom: 14, right: 16 }}>
+            <span style={{ fontSize: 28, fontWeight: 900, color: B.accent, letterSpacing: "-0.03em" }}>{fmt(item.price)}</span>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div style={{ overflowY: "auto", padding: "14px 18px", paddingBottom: "max(28px, calc(16px + env(safe-area-inset-bottom)))", overscrollBehavior: "contain" } as React.CSSProperties}>
+          {/* Name */}
+          <h2 style={{ fontSize: 20, fontWeight: 900, color: B.text, margin: "0 0 8px", lineHeight: 1.1, textTransform: "uppercase", letterSpacing: "-0.025em" }}>
+            {item.name}
+          </h2>
+
+          {/* Tags */}
+          {item.tags?.length > 0 && (
+            <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 12 }}>
+              {item.tags.map(t => (
+                <span key={t} style={{ fontSize: 9, color: B.accent, background: B.accentDim, border: `1px solid ${B.accentBorder}`, padding: "3px 9px", borderRadius: 2, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                  {t}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Description */}
+          <p style={{ fontSize: 14, color: B.textMid, lineHeight: 1.65, margin: "0 0 20px" }}>
+            {item.description}
+          </p>
+
+          {/* Divider */}
+          <div style={{ height: 1, background: B.border, marginBottom: 20 }} />
+
+          {/* CTA */}
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            style={{ width: "100%", padding: "16px", background: B.accent, color: B.black, border: "none", borderRadius: 5, fontSize: 13, fontWeight: 900, cursor: "pointer", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+            Order — {fmt(item.price)}
           </motion.button>
         </div>
       </motion.div>
@@ -262,10 +352,11 @@ function Drawer({ item, onClose, containerRef }: { item: MenuItem; onClose: () =
   );
 }
 
+// ── Page ─────────────────────────────────────────────────────────────────────
 export default function OurHouseMenu() {
-  const [filters, setFilters]     = useState<string[]>([]);
-  const [activeCat, setActiveCat] = useState(menuData[0].id);
-  const [selected, setSelected]   = useState<MenuItem | null>(null);
+  const [filters, setFilters]       = useState<string[]>([]);
+  const [activeCat, setActiveCat]   = useState(menuData[0].id);
+  const [selected, setSelected]     = useState<MenuItem | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
 
@@ -275,7 +366,6 @@ export default function OurHouseMenu() {
   const secRefs      = useRef<Record<string, HTMLDivElement | null>>({});
   const scrollTimer  = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Observe which section is in view
   useEffect(() => {
     const observers = menuData.map(cat => {
       const el = secRefs.current[cat.id];
@@ -284,9 +374,9 @@ export default function OurHouseMenu() {
         if (entry.isIntersecting && !isScrolling) {
           setActiveCat(cat.id);
           navRef.current?.querySelector<HTMLElement>(`[data-cat="${cat.id}"]`)
-            ?.scrollIntoView({ inline:"center", block:"nearest" });
+            ?.scrollIntoView({ inline: "center", block: "nearest" });
         }
-      }, { root: containerRef.current, threshold:0.15, rootMargin:"-100px 0px -55% 0px" });
+      }, { root: containerRef.current, threshold: 0.15, rootMargin: "-100px 0px -55% 0px" });
       obs.observe(el);
       return obs;
     });
@@ -294,22 +384,19 @@ export default function OurHouseMenu() {
   }, [filters, isScrolling]);
 
   const scrollTo = useCallback((id: string) => {
-    const el = secRefs.current[id];
+    const el     = secRefs.current[id];
     const sticky = stickyRef.current;
-    const container = containerRef.current;
-    if (!el || !sticky || !container) return;
+    const cont   = containerRef.current;
+    if (!el || !sticky || !cont) return;
 
     setActiveCat(id);
     setIsScrolling(true);
+    navRef.current?.querySelector<HTMLElement>(`[data-cat="${id}"]`)?.scrollIntoView({ inline: "center", block: "nearest" });
 
-    navRef.current?.querySelector<HTMLElement>(`[data-cat="${id}"]`)?.scrollIntoView({ inline:"center", block:"nearest" });
-
-    const stickyH = sticky.getBoundingClientRect().height;
-    const containerTop = container.getBoundingClientRect().top;
-    const elTop = el.getBoundingClientRect().top;
-    const target = container.scrollTop + (elTop - containerTop) - stickyH;
-
-    container.scrollTo({ top: target, behavior:"smooth" });
+    const stickyH    = sticky.getBoundingClientRect().height;
+    const contTop    = cont.getBoundingClientRect().top;
+    const elTop      = el.getBoundingClientRect().top;
+    cont.scrollTo({ top: cont.scrollTop + (elTop - contTop) - stickyH, behavior: "smooth" });
 
     if (scrollTimer.current) clearTimeout(scrollTimer.current);
     scrollTimer.current = setTimeout(() => setIsScrolling(false), 800);
@@ -318,47 +405,77 @@ export default function OurHouseMenu() {
   const toggleFilter = (t: string) =>
     setFilters(p => p.includes(t) ? p.filter(x => x !== t) : [...p, t]);
 
-  const filtered = menuData.map(cat => ({
-    ...cat,
-    items: filters.length === 0 ? cat.items : cat.items.filter(i => filters.every(f => i.tags?.includes(f)))
-  })).filter(c => c.items.length > 0);
+  const filtered = menuData
+    .map(cat => ({
+      ...cat,
+      items: filters.length === 0 ? cat.items : cat.items.filter(i => filters.every(f => i.tags?.includes(f))),
+    }))
+    .filter(c => c.items.length > 0);
 
   return (
-    <div ref={containerRef} style={{ height:"100dvh", overflowY:"auto", overflowX:"hidden", background:B.black, fontFamily:"-apple-system,BlinkMacSystemFont,'Inter',sans-serif", color:B.text, overscrollBehavior:"contain", scrollBehavior:"auto" } as React.CSSProperties}>
+    <div
+      ref={containerRef}
+      style={{ height: "100dvh", overflowY: "auto", overflowX: "hidden", background: B.black, fontFamily: "-apple-system,BlinkMacSystemFont,'Inter',sans-serif", color: B.text, overscrollBehavior: "contain" } as React.CSSProperties}
+    >
 
-      {/* ── Hero ─────────────────────────────── */}
-      <div style={{ background:"#0D0D0D", padding:"28px 18px 22px", borderBottom:`2px solid ${B.yellow}`, position:"relative", overflow:"hidden" }}>
-        <div style={{ position:"absolute", top:-40, right:-40, width:180, height:180, borderRadius:"50%", background:B.yellow, opacity:0.04 }} />
-        <div style={{ display:"flex", alignItems:"center", gap:14, marginBottom:14 }}>
-          <div style={{ width:52, height:52, background:B.yellow, borderRadius:12, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, fontWeight:900, color:B.black, flexShrink:0 }}>OH</div>
-          <div>
-            <div style={{ fontSize:24, fontWeight:900, color:B.text, lineHeight:1, letterSpacing:"-0.02em" }}>Our House</div>
-            <div style={{ fontSize:10, color:B.yellow, fontWeight:700, letterSpacing:"0.18em", textTransform:"uppercase", marginTop:3 }}>Sport & Gaming Bar</div>
+      {/* ── Hero ──────────────────────────────────────────────────────────── */}
+      <div style={{ background: B.black, borderBottom: `1px solid ${B.border}`, position: "relative", overflow: "hidden" }}>
+        {/* Accent left rail */}
+        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 3, background: B.accent }} />
+
+        <div style={{ padding: "22px 18px 18px 22px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+            <div style={{ width: 48, height: 48, background: B.accent, borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 900, color: B.black, flexShrink: 0, letterSpacing: "-0.03em" }}>
+              OH
+            </div>
+            <div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: B.text, lineHeight: 1, letterSpacing: "-0.04em", textTransform: "uppercase" }}>
+                Our House
+              </div>
+              <div style={{ fontSize: 9, color: B.accent, fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", marginTop: 4 }}>
+                Sport & Gaming Bar
+              </div>
+            </div>
           </div>
-        </div>
-        <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
-          {["🎮 Gaming Lounge","📍 Bayamón, PR","⭐ 4.8","🕐 Open Now"].map(t => (
-            <span key={t} style={{ fontSize:11, background:"#1E1E1E", color:"#888", border:`1px solid ${B.border}`, padding:"4px 10px", borderRadius:99, fontWeight:600 }}>{t}</span>
-          ))}
+
+          <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+            {["🎮 Gaming", "📍 Bayamón PR", "⭐ 4.8", "🕐 Open Now"].map(t => (
+              <span key={t} style={{ fontSize: 9, background: "#0A0A0A", color: B.textMid, border: `1px solid ${B.border}`, padding: "3px 9px", borderRadius: 2, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                {t}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* ── Sticky Nav ───────────────────────── */}
-      <div ref={stickyRef} id="sticky-nav" style={{ position:"sticky", top:0, zIndex:100, background:"rgba(10,10,10,0.97)", backdropFilter:"blur(16px)", borderBottom:`1px solid ${B.border}` }}>
-        {/* Category tabs */}
-        <div ref={navRef} style={{ display:"flex", gap:0, overflowX:"auto", scrollbarWidth:"none", padding:"10px 12px 0" } as React.CSSProperties}>
+      {/* ── Sticky Nav ────────────────────────────────────────────────────── */}
+      <div
+        ref={stickyRef}
+        style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(0,0,0,0.96)", backdropFilter: "blur(20px)", borderBottom: `1px solid ${B.border}` }}
+      >
+        {/* Category tabs — horizontal scroll mobile, wraps on md+ */}
+        <div
+          ref={navRef}
+          className="flex overflow-x-auto md:overflow-x-visible md:flex-wrap"
+          style={{ padding: "8px 10px 0" }}
+        >
           {menuData.map(cat => {
             const active = activeCat === cat.id;
             return (
-              <div key={cat.id} style={{ position:"relative", flexShrink:0 }}>
+              <div key={cat.id} style={{ position: "relative", flexShrink: 0 }}>
                 {active && (
-                  <motion.div layoutId="tab-bg"
-                    style={{ position:"absolute", inset:0, background:B.yellow, borderRadius:"10px 10px 0 0" }}
-                    transition={{ type:"spring", stiffness:500, damping:38 }} />
+                  <motion.div
+                    layoutId="tab-indicator"
+                    style={{ position: "absolute", inset: 0, background: B.accent, borderRadius: "4px 4px 0 0" }}
+                    transition={{ type: "spring", stiffness: 600, damping: 42 }}
+                  />
                 )}
-                <button data-cat={cat.id} onClick={() => scrollTo(cat.id)}
-                  style={{ position:"relative", zIndex:1, display:"flex", alignItems:"center", gap:5, padding:"9px 13px", border:"none", background:"transparent", color: active ? B.black : B.textDim, fontSize:13, fontWeight: active ? 800 : 500, cursor:"pointer", whiteSpace:"nowrap", borderRadius:"10px 10px 0 0", transition:"color 0.15s" }}>
-                  <span>{cat.emoji}</span>
+                <button
+                  data-cat={cat.id}
+                  onClick={() => scrollTo(cat.id)}
+                  style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: 4, padding: "9px 11px", border: "none", background: "transparent", color: active ? B.black : B.textDim, fontSize: 11, fontWeight: 900, cursor: "pointer", whiteSpace: "nowrap", borderRadius: "4px 4px 0 0", textTransform: "uppercase", letterSpacing: "0.06em", transition: "color 0.1s" }}
+                >
+                  <span style={{ fontSize: 13 }}>{cat.emoji}</span>
                   <span>{cat.label}</span>
                 </button>
               </div>
@@ -367,59 +484,92 @@ export default function OurHouseMenu() {
         </div>
 
         {/* Filter row */}
-        <div style={{ display:"flex", alignItems:"center", gap:7, overflowX:"auto", scrollbarWidth:"none", padding:"8px 12px 10px" } as React.CSSProperties}>
-          <motion.button whileTap={{ scale:0.94 }} onClick={() => setShowFilters(p => !p)}
-            style={{ display:"flex", alignItems:"center", gap:5, padding:"6px 12px", borderRadius:99, border:`1.5px solid ${showFilters ? B.yellow : B.border}`, background: showFilters ? B.yellowBg : "transparent", color: showFilters ? B.yellow : B.textDim, fontSize:12, fontWeight:700, cursor:"pointer", flexShrink:0, whiteSpace:"nowrap" }}>
-            <svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M0 1h13M2 5h9M4 9h5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
-            Filtrar
-            {filters.length > 0 && <span style={{ background:B.yellow, color:B.black, borderRadius:"50%", width:16, height:16, fontSize:9, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900 }}>{filters.length}</span>}
+        <div className="flex items-center gap-2 overflow-x-auto" style={{ padding: "7px 10px 9px" }}>
+          <motion.button
+            whileTap={{ scale: 0.93 }}
+            onClick={() => setShowFilters(p => !p)}
+            style={{ display: "flex", alignItems: "center", gap: 5, padding: "6px 11px", borderRadius: 2, border: `1.5px solid ${showFilters ? B.accent : B.border}`, background: showFilters ? B.accentDim : "transparent", color: showFilters ? B.accent : B.textDim, fontSize: 9, fontWeight: 900, cursor: "pointer", flexShrink: 0, whiteSpace: "nowrap", textTransform: "uppercase", letterSpacing: "0.1em" }}
+          >
+            <svg width="12" height="9" viewBox="0 0 13 10" fill="none">
+              <path d="M0 1h13M2 5h9M4 9h5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+            </svg>
+            Filter
+            {filters.length > 0 && (
+              <span style={{ background: B.accent, color: B.black, borderRadius: 2, width: 16, height: 16, fontSize: 9, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>
+                {filters.length}
+              </span>
+            )}
           </motion.button>
+
           <AnimatePresence>
             {showFilters && ALL_TAGS.map((t, i) => (
-              <motion.button key={t}
-                initial={{ opacity:0, scale:0.85 }} animate={{ opacity:1, scale:1, transition:{ delay: i*0.05 } }} exit={{ opacity:0, scale:0.85 }}
-                whileTap={{ scale:0.93 }} onClick={() => toggleFilter(t)}
-                style={{ padding:"6px 13px", borderRadius:99, fontSize:12, fontWeight:700, cursor:"pointer", flexShrink:0, border:`1.5px solid ${filters.includes(t) ? B.yellow : B.border}`, background: filters.includes(t) ? B.yellow : "transparent", color: filters.includes(t) ? B.black : B.textDim, whiteSpace:"nowrap" }}>
+              <motion.button
+                key={t}
+                initial={{ opacity: 0, scale: 0.82 }}
+                animate={{ opacity: 1, scale: 1, transition: { delay: i * 0.04 } }}
+                exit={{ opacity: 0, scale: 0.82 }}
+                whileTap={{ scale: 0.92 }}
+                onClick={() => toggleFilter(t)}
+                style={{ padding: "6px 11px", borderRadius: 2, fontSize: 9, fontWeight: 900, cursor: "pointer", flexShrink: 0, border: `1.5px solid ${filters.includes(t) ? B.accent : B.border}`, background: filters.includes(t) ? B.accent : "transparent", color: filters.includes(t) ? B.black : B.textDim, whiteSpace: "nowrap", textTransform: "uppercase", letterSpacing: "0.08em" }}
+              >
                 {t}
               </motion.button>
             ))}
           </AnimatePresence>
+
           {filters.length > 0 && (
-            <motion.button initial={{ opacity:0 }} animate={{ opacity:1 }} whileTap={{ scale:0.93 }}
+            <motion.button
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} whileTap={{ scale: 0.92 }}
               onClick={() => setFilters([])}
-              style={{ fontSize:11, color:"#FF4500", background:"transparent", border:"1px solid rgba(255,69,0,0.3)", borderRadius:99, padding:"5px 10px", cursor:"pointer", flexShrink:0, fontWeight:700, whiteSpace:"nowrap" }}>
+              style={{ fontSize: 9, color: "#FF4422", background: "transparent", border: "1px solid rgba(255,68,34,0.3)", borderRadius: 2, padding: "5px 10px", cursor: "pointer", flexShrink: 0, fontWeight: 900, whiteSpace: "nowrap", textTransform: "uppercase", letterSpacing: "0.08em" }}
+            >
               Clear
             </motion.button>
           )}
         </div>
       </div>
 
-      {/* ── Menu Sections ────────────────────── */}
-      <div style={{ padding:"20px 14px 80px" }}>
+      {/* ── Menu Sections ─────────────────────────────────────────────────── */}
+      <div className="max-w-7xl mx-auto w-full px-3 md:px-6" style={{ paddingTop: 22, paddingBottom: 80 }}>
         <AnimatePresence mode="wait">
           {filtered.length === 0 ? (
-            <motion.div key="empty" initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
-              style={{ textAlign:"center", padding:"80px 20px" }}>
-              <div style={{ fontSize:48, marginBottom:12 }}>🎮</div>
-              <p style={{ fontSize:16, fontWeight:700, color:"#aaa" }}>No hay items con ese filtro.</p>
-              <motion.button whileTap={{ scale:0.95 }} onClick={() => setFilters([])}
-                style={{ marginTop:16, background:B.yellow, color:B.black, border:"none", borderRadius:99, padding:"10px 24px", fontSize:14, fontWeight:800, cursor:"pointer" }}>
-                Reset filtros
+            <motion.div
+              key="empty"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              style={{ textAlign: "center", padding: "80px 20px" }}
+            >
+              <div style={{ fontSize: 40, marginBottom: 14 }}>🎮</div>
+              <p style={{ fontSize: 11, fontWeight: 900, color: B.textDim, textTransform: "uppercase", letterSpacing: "0.14em", marginBottom: 20 }}>
+                No items match that filter
+              </p>
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={() => setFilters([])}
+                style={{ background: B.accent, color: B.black, border: "none", borderRadius: 4, padding: "13px 30px", fontSize: 11, fontWeight: 900, cursor: "pointer", textTransform: "uppercase", letterSpacing: "0.1em" }}
+              >
+                Reset Filters
               </motion.button>
             </motion.div>
           ) : filtered.map(cat => (
-            <div key={cat.id} ref={el => { secRefs.current[cat.id] = el; }} style={{ marginBottom:36 }}>
+            <div
+              key={cat.id}
+              ref={el => { secRefs.current[cat.id] = el; }}
+              style={{ marginBottom: 44 }}
+            >
               {/* Section header */}
-              <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
-                <div style={{ display:"inline-flex", alignItems:"center", gap:7, background:B.yellow, borderRadius:10, padding:"6px 14px" }}>
-                  <span style={{ fontSize:15 }}>{cat.emoji}</span>
-                  <span style={{ fontSize:12, fontWeight:900, color:B.black, textTransform:"uppercase", letterSpacing:"0.1em" }}>{cat.label}</span>
-                </div>
-                <div style={{ flex:1, height:1, background:B.border }} />
-                <span style={{ fontSize:11, color:B.textDim }}>{cat.items.length}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                <div style={{ width: 3, height: 16, background: B.accent, borderRadius: 1, flexShrink: 0 }} />
+                <span style={{ fontSize: 11, fontWeight: 900, color: B.text, textTransform: "uppercase", letterSpacing: "0.14em" }}>
+                  {cat.emoji}&nbsp;&nbsp;{cat.label}
+                </span>
+                <div style={{ flex: 1, height: 1, background: B.border }} />
+                <span style={{ fontSize: 10, color: B.textDim, fontWeight: 700, letterSpacing: "0.04em" }}>
+                  {cat.items.length}
+                </span>
               </div>
-              {/* Cards */}
-              <div style={{ display:"grid", gap:12 }}>
+
+              {/* Responsive card grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                 <AnimatePresence>
                   {cat.items.map((item, i) => (
                     <ItemCard key={item.id} item={item} index={i} onClick={setSelected} />
@@ -431,18 +581,34 @@ export default function OurHouseMenu() {
         </AnimatePresence>
       </div>
 
-      {/* ── Footer banner ────────────────────── */}
-      <div style={{ margin:"0 14px 24px", background:"#161616", borderRadius:16, padding:"16px 18px", border:`1px solid ${B.border}`, display:"flex", alignItems:"center", gap:14 }}>
-        <div style={{ width:44, height:44, background:B.yellow, borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, flexShrink:0 }}>🎮</div>
-        <div>
-          <p style={{ fontSize:13, fontWeight:800, color:B.text, margin:"0 0 2px" }}>Game Night — Every Friday</p>
-          <p style={{ fontSize:11.5, color:B.textDim, margin:0, lineHeight:1.5 }}>Torneos, drink specials y más. ¡Reserva tu mesa!</p>
+      {/* ── Footer Banner ─────────────────────────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-3 md:px-6" style={{ paddingBottom: 28 }}>
+        <div style={{ background: B.card, borderRadius: 5, padding: "15px 16px", border: `1px solid ${B.border}`, display: "flex", alignItems: "center", gap: 14, position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 3, background: B.accent }} />
+          <div style={{ width: 42, height: 42, background: B.accent, borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0, marginLeft: 8 }}>
+            🎮
+          </div>
+          <div>
+            <p style={{ fontSize: 11, fontWeight: 900, color: B.text, margin: "0 0 3px", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              Game Night — Every Friday
+            </p>
+            <p style={{ fontSize: 11, color: B.textDim, margin: 0, lineHeight: 1.5 }}>
+              Tournaments, drink specials & more. Reserve your table.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* ── Drawer ───────────────────────────── */}
+      {/* ── Drawer ────────────────────────────────────────────────────────── */}
       <AnimatePresence>
-        {selected && <Drawer key="drawer" item={selected} onClose={() => setSelected(null)} containerRef={containerRef} />}
+        {selected && (
+          <Drawer
+            key="drawer"
+            item={selected}
+            onClose={() => setSelected(null)}
+            containerRef={containerRef}
+          />
+        )}
       </AnimatePresence>
     </div>
   );
