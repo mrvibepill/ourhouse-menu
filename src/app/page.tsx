@@ -288,7 +288,8 @@ function Drawer({ item, onClose, containerRef }: {
         initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
         transition={{ type: "spring", stiffness: 540, damping: 44, mass: 0.7 }}
         onClick={e => e.stopPropagation()}
-        style={{ width: "100%", maxHeight: "90vh", background: B.black, borderRadius: "12px 12px 0 0", border: `1px solid ${B.border}`, borderBottom: "none", overflow: "hidden", display: "flex", flexDirection: "column" }}
+        className="w-full md:max-w-2xl md:mx-auto rounded-t-xl md:rounded-t-2xl"
+        style={{ maxHeight: "90vh", background: B.black, border: `1px solid ${B.border}`, borderBottom: "none", overflow: "hidden", display: "flex", flexDirection: "column" }}
       >
         {/* Drag pill */}
         <div style={{ display: "flex", justifyContent: "center", paddingTop: 10, paddingBottom: 4, flexShrink: 0 }}>
