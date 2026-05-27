@@ -42,7 +42,7 @@ interface Category {
 
 const menuData: Category[] = [
   { id:"aperitivos", label:"Aperitivos", emoji:"🎮", items:[
-    { id:"a1", name:"Game Platter",       price:17.99, description:"Selecciona 3: Wings (4), Onion Rings (4), Carne Frita (4), Mozzarella Sticks (4), Waffle Batata Fries, Boneless Wings (4).", imageUrl:"https://picsum.photos/seed/gameplatter/600/400", badge:"bestseller", tags:["Shareable"] },
+    { id:"a1", name:"Game Platter",       price:17.99, description:"Selecciona 3: Wings (4), Onion Rings (4), Carne Frita (4), Mozzarella Sticks (4), Waffle Batata Fries, Boneless Wings (4).", imageUrl:"https://wqfwaoakjbev169j.public.blob.vercel-storage.com/Ourhouse-Menu-samplertest1.png", badge:"bestseller", tags:["Shareable"] },
     { id:"a2", name:"Buffalo Wings",      price:9.99,  description:"Alitas de Pollo (8). Elige tu salsa: BBQ, Buffalo, Blue Cheese, Ranch o Honey Mustard.", imageUrl:"https://picsum.photos/seed/buffalowings/600/400", badge:"bestseller", tags:[] },
     { id:"a3", name:"Boneless Wings",     price:10.99, description:"Trocitos de Pollo sin hueso (8). Elige tu salsa: BBQ, Buffalo, Blue Cheese, Ranch o Honey Mustard.", imageUrl:"https://picsum.photos/seed/boneless/600/400", badge:null, tags:[] },
     { id:"a4", name:"Mozzarella Sticks",  price:9.99,  description:"Queso mozzarella empanizados y crujientes (7), acompañados con salsa marinara.", imageUrl:"https://picsum.photos/seed/mozzsticks/600/400", badge:null, tags:["Vegetarian"] },
