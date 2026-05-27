@@ -24,3 +24,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Remove iOS tap flash on all interactive elements */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide scrollbars on webkit (iOS Safari, Chrome on iOS) */
+::-webkit-scrollbar {
+  display: none;
+}
